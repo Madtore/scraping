@@ -1,0 +1,27 @@
+{
+    "config": {},
+    "database": {
+        "nombre": "database",
+        "tabla": {
+            "nombre": "tabla",
+            "campos": {
+                "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+                "url": "TEXT",
+                "descripcion": "TEXT",
+                "contenido": "LONG TEXT"
+            }
+        }
+    },
+    "urls":{ "batallas": {
+        "urls":{
+            "divina_comedia": {
+                "urls": "https://es.wikipedia.org/wiki/Divina_comedia"
+            }
+        }
+    },
+            "personajes": "personajes",
+            "personajes_batallas": "personajes_batallas"},
+    "api":{
+        "url": "http://localhost:3000"
+    }
+}
