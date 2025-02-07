@@ -1,59 +1,65 @@
 import sqlite3
-from configuration.config import Config
-from regex import match_regex
+
 class DataBase:
     def __init__(self):
-        self.config = Config.get_config()
-        self.db = sqlite3.connect(self.config.database.nombre)
+        self.db = sqlite3.connect("database.db")
         self.cursor = self.db.cursor()
+        self.create_table()
         
     def create_table(self):
         self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS {nombre} (
-                id {id_tipo},
-                url {url_tipo},
-                descripcion {descripcion_tipo},
-                contenido {contenido_tipo}
+            CREATE TABLE IF NOT EXISTS datos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                url TEXT,
+                titulo TEXT,
+                sub_titulo TEXT,
+                descripcion TEXT,
+                contenido LONG TEXT
             )
-        """).format(
-            nombre = self.config.database.tabla.nombre,
-            id_tipo = self.config.database.tabla.campos.id,
-            url_tipo = self.config.database.tabla.campos.url,
-            descripcion_tipo = self.config.database.tabla.campos.descripcion,
-            contenido_tipo = self.config.database.tabla.campos.contenido
-        )
-        
+        """)  
         self.db.commit()
-        self.db.close()
-        
-    
+
         
         
-    def insert_data(self, id, url, descripcion, contenido):
-        self.cursor.execute("""
-            INSERT INTO {nombre} (id, url, descripcion, contenido)
-            VALUES (?, ?, ?, ?)
-        """, (id, url, descripcion, contenido))
-        
-        self.db.commit()
-        self.db.close()
+    def insert_data(self, url, titulo, descripcion , sub_titulo,contenido):
+        try:
+            self.cursor.execute("""
+                INSERT INTO datos (url, titulo, descripcion, sub_titulo, contenido)
+                VALUES (?, ?, ?, ?, ?)
+            """, (url, titulo, descripcion, sub_titulo, contenido))
+            self.db.commit()
+        except sqlite3.Error as e:
+            print(f"Error al insertar datos: {e}")
+            self.db.rollback()
+
         
         
     def get_data_by_regex(self, regex):
+        regex = f"%{regex}%"
         self.cursor.execute(f"""
             SELECT *
-            FROM ?
+            FROM datos
             WHERE 
             url LIKE ?
+            OR
+            titulo LIKE ?
             OR
             descripcion LIKE ?
             OR
             contenido LIKE ?
         """, (
-              self.config.database.tabla.nombre,
+             regex,
               regex,
               regex,
               regex))
         
+        return self.cursor.fetchall()
+    
+    def get_all_data(self):
+        self.cursor = self.db.cursor()
+        self.cursor.execute(f"""
+            SELECT *
+            FROM datos
+        """)
         return self.cursor.fetchall()
                 

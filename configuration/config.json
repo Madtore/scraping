@@ -1,27 +1,25 @@
 {
-    "config": {},
-    "database": {
-        "nombre": "database",
-        "tabla": {
-            "nombre": "tabla",
-            "campos": {
-                "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
-                "url": "TEXT",
-                "descripcion": "TEXT",
-                "contenido": "LONG TEXT"
-            }
+  "urls": {
+    "guerras": {
+      "primera_guera_mundial": [
+        {
+          "nombre": "Primera guerra Mundial",
+          "urls": [
+            "https://es.wikipedia.org/wiki/Primera_Guerra_Mundial",
+            "https://encyclopedia.ushmm.org/content/es/article/world-war-i",
+            "https://www.nationalgeographic.es/historia/2019/04/causas-consecuencias-primera-guerra-mundial"
+          ]
         }
-    },
-    "urls":{ "batallas": {
-        "urls":{
-            "divina_comedia": {
-                "urls": "https://es.wikipedia.org/wiki/Divina_comedia"
-            }
-        }
-    },
-            "personajes": "personajes",
-            "personajes_batallas": "personajes_batallas"},
-    "api":{
-        "url": "http://localhost:3000"
+      ]
     }
+  },
+  "menu": {
+    "bienvenido": "Bienvenido al menu principal",
+    "seleccion": "Seleccione una opcion:",
+    "opciones": {
+      "primera": "1. Cargar datos de una pagina web",
+      "segunda": "2. Buscar datos en la base de datos",
+      "tercera": "3. Salir"
+    }
+  }
 }
