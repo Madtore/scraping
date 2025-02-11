@@ -42,7 +42,12 @@ class ServiceScraping:
             print(f"Subtítulo: {dato['sub_titulo']}\nContenido: {dato['contenido']}\n")
             try:
                 while opz != 1 and opz != 2:
-                    opz = int(input("Quieres guarda el contenido en la base de datos? 1.Si 2.No: "))
+                    opz = int(input("""
+                                    Quieres guarda el contenido en la base de datos? 
+                                    1.Si 
+                                    2.No
+                                    : 
+                                    """))
 
                 if opz == 1:
                     self.db.insert_data(self.url, titulo, descripcion, dato['sub_titulo'], dato['contenido'])
@@ -57,7 +62,7 @@ class ServiceScraping:
     def get_datos_formateados(self , regex):
         os.system("cls")
         data = self.db.get_data_by_regex(regex)
-        if data:
+        if len(data)>0:
             for dato in data:
                 url = dato[1]
                 titulo = dato[2]
@@ -68,7 +73,7 @@ class ServiceScraping:
 
             while True:
                 try:
-                    opz = int(input("Quieres generar un archivo html con los datos? 1.Si 2.No: "))
+                    opz = 0
                     while opz != 1 and opz != 2:
                         opz = int(input("Quieres generar un archivo html con los datos? 1.Si 2.No: "))
                     if opz == 1:
