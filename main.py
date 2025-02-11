@@ -5,6 +5,7 @@ from configuration.config import Config
 import datas.data_base as db
 from tkinter import *
 
+
 class ScraperGUI:
     def __init__(self, root):
         self.root = root
@@ -21,6 +22,7 @@ class ScraperGUI:
         
         self.scraping_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.scraping_frame, text="Cargar Datos")
+        
         
         self.search_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.search_frame, text="Buscar")
@@ -128,11 +130,10 @@ class ScraperGUI:
         scraping = ServiceScraping(url)
         titulo, descripcion, datos = scraping.get_data()
         
-        # Clear previous content
+
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
         
-        # Store data for later use
         self.current_data = {
             'url': url,
             'titulo': titulo,
@@ -197,8 +198,7 @@ class ScraperGUI:
             
         data = self.db.get_data_by_regex(regex)
         self.search_results = data
-        
-        # Clear previous results
+
         for widget in self.results_scrollable_frame.winfo_children():
             widget.destroy()
         
