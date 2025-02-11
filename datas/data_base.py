@@ -2,7 +2,7 @@ import sqlite3
 
 class DataBase:
     def __init__(self):
-        self.db = sqlite3.connect("database.db")
+        self.db = sqlite3.connect("datas/database.db")
         self.cursor = self.db.cursor()
         self.create_table()
         

@@ -12,14 +12,5 @@
         }
       ]
     }
-  },
-  "menu": {
-    "bienvenido": "Bienvenido al menu principal",
-    "seleccion": "Seleccione una opcion:",
-    "opciones": {
-      "primera": "1. Cargar datos de una pagina web",
-      "segunda": "2. Buscar datos en la base de datos",
-      "tercera": "3. Salir"
-    }
   }
 }
