@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox
 from services.service_scraping import ServiceScraping
+from services.service_api import ServiceAPI
 from configuration.config import Config
 import datas.data_base as db
 from tkinter import *
@@ -23,12 +24,36 @@ class ScraperGUI:
         self.scraping_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.scraping_frame, text="Cargar Datos")
         
+        self.api_frame = ttk.Frame(self.notebook)  
+        self.notebook.add(self.api_frame, text="Consultar API")     
         
         self.search_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.search_frame, text="Buscar")
         
         self.setup_scraping_tab()
         self.setup_search_tab()
+        self.setup_api_tab()
+        
+        
+    def setup_api_tab(self):
+        api_frame = ttk.LabelFrame(self.api_frame, text="Consultar API", padding="5")
+        api_frame.pack(fill=tk.X, pady=5)
+        
+        self.palabra_var = tk.StringVar()
+        self.palabra_var.set("Tema a buscar")  
+        
+        ttk.Label(api_frame, text="API URL:").pack(side=tk.LEFT, padx=5)
+        palabra_var_entry = ttk.Entry(api_frame, textvariable=self.palabra_var, width=70)
+        palabra_var_entry.pack(pady=5)
+        
+        fetch_btn = ttk.Button(api_frame, text="Consultar API", command=self.fetch_api_data)
+        fetch_btn.pack(pady=5)
+        
+        self.api_data_frame = ttk.LabelFrame(self.api_frame, text="Datos API", padding="5")
+        self.api_data_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        
+        self.api_data_area = ttk.Frame(self.api_data_frame)
+        self.api_data_area.pack(fill=tk.BOTH, expand=True)
         
     def setup_scraping_tab(self):
         url_frame = ttk.LabelFrame(self.scraping_frame, text="URLs Disponibles", padding="5")
@@ -75,7 +100,6 @@ class ScraperGUI:
         scrollbar.pack(side="right", fill="y")
         
     def setup_search_tab(self):
-        # Search frame
         search_control_frame = ttk.Frame(self.search_frame, padding="5")
         search_control_frame.pack(fill=tk.X, pady=5)
         
@@ -87,11 +111,11 @@ class ScraperGUI:
         ttk.Button(search_control_frame, text="Buscar", command=self.search_content).pack(side=tk.LEFT, padx=5)
         ttk.Button(search_control_frame, text="Generar HTML", command=self.generate_html).pack(side=tk.RIGHT, padx=5)
         
-        # Results area
+
         self.results_frame = ttk.LabelFrame(self.search_frame, text="Resultados", padding="5")
         self.results_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
-        # Selection buttons for search results
+
         btn_frame = ttk.Frame(self.results_frame)
         btn_frame.pack(fill=tk.X, pady=5)
         
@@ -120,7 +144,67 @@ class ScraperGUI:
         self.search_results = []
         self.search_checkboxes = []
         self.search_vars = []
-            
+        
+    def fetch_api_data(self):
+        palabra = self.palabra_var.get()  # Obtener la palabra para Wikipedia
+        if not palabra:
+            messagebox.showwarning("Advertencia", "Por favor ingrese una palabra válida para buscar en Wikipedia")
+            return
+    
+        service = ServiceAPI(palabra)
+        data = service.fetch_data()
+    
+        if not data:
+            messagebox.showwarning("Error", "No se pudieron obtener los datos de la API.")
+            return
+    
+        # Limpiar los widgets previos
+        for widget in self.api_data_area.winfo_children():
+            widget.destroy()
+    
+        # Mostrar el resumen en párrafos
+        if isinstance(data, str):  # Si el dato es un texto, como un resumen de Wikipedia
+            paragraphs = data.split('\n')  # Dividir el texto en párrafos
+    
+            self.paragraph_vars = []  # Lista para guardar las variables de selección
+    
+            for paragraph in paragraphs:
+                var = tk.BooleanVar()  # Crear una variable de tipo Boolean para cada párrafo
+                self.paragraph_vars.append(var)
+    
+                frame = ttk.Frame(self.api_data_area)  # Crear un contenedor para el párrafo
+                frame.pack(fill=tk.X, pady=5)
+    
+                cb = ttk.Checkbutton(frame, variable=var)  # Crear un Checkbutton para seleccionar el párrafo
+                cb.pack(side=tk.LEFT)
+    
+                label = ttk.Label(frame, text=paragraph, wraplength=700)  # Mostrar el párrafo en un label
+                label.pack(side=tk.LEFT, padx=5)
+    
+            # Mostrar un mensaje indicativo
+            ttk.Label(self.api_data_area, text="Seleccione los párrafos para guardar").pack(pady=5)
+        else:
+            print(f"Datos inesperados: {data}")
+            ttk.Label(self.api_data_area, text="Error: Formato de datos inesperado.").pack(pady=5)
+
+    def save_selected_data(self):
+    # Filtrar los párrafos seleccionados
+        selected_paragraphs = [
+            paragraph
+            for var, paragraph in zip(self.paragraph_vars, data.split('\n'))
+            if var.get()  # Si el Checkbutton está seleccionado
+        ]
+
+        if selected_paragraphs:
+            # Guardar los párrafos seleccionados (puedes guardarlos en un archivo o base de datos)
+            with open("selected_paragraphs.txt", "w") as f:
+                for paragraph in selected_paragraphs:
+                    f.write(paragraph + "\n\n")
+
+            messagebox.showinfo("Éxito", "Los párrafos seleccionados se han guardado.")
+        else:
+            messagebox.showwarning("Advertencia", "No se seleccionaron párrafos para guardar.")
+
     def load_url(self):
         url = self.url_var.get()
         if not url:

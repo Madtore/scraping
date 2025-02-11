@@ -31,69 +31,7 @@ class ServiceScraping:
 
         return titulo, descripcion, datos
     
-    def get_contenido(self):
-        datos = self.get_data()
 
-        titulo = datos[0]
-        descripcion = datos[1]
-        contenido_extraido = datos[2] 
-
-        print(titulo, descripcion)
-        for dato in contenido_extraido:
-            print(f"Subtítulo: {dato['sub_titulo']}\nContenido: {dato['contenido']}\n")
-            try:
-                while opz != 1 and opz != 2:
-                    opz = int(input("""
-                                    Quieres guarda el contenido en la base de datos? 
-                                    1.Si 
-                                    2.No
-                                    : 
-                                    """))
-
-                if opz == 1:
-                    self.db.insert_data(self.url, titulo, descripcion, dato['sub_titulo'], dato['contenido'])
-                elif opz == 2:
-                    pass
-            except Exception as e:
-                print(f"Error: {e}")    
-
-
-
-
-    def get_datos_formateados(self , regex):
-        os.system("cls")
-        data = self.db.get_data_by_regex(regex)
-        if len(data)>0:
-            for dato in data:
-                url = dato[1]
-                titulo = dato[2]
-                sub_titulo = dato[3]
-                descripcion = dato[4]
-                contenido = dato[5]
-                print(f"URL: {url}\nTITULO: {titulo}\nSUB-TITULO: {sub_titulo}\nDESCRIPCION: {descripcion}\nCONTENIDO: {contenido}\n")
-
-            while True:
-                try:
-                    opz = 0
-                    while opz != 1 and opz != 2:
-                        opz = int(input("Quieres generar un archivo html con los datos? 1.Si 2.No: "))
-                    if opz == 1:
-                        generado = self.generar_html(data)
-                        if generado:
-                            print("Archivo generado con exito")
-                        else:
-                            print("Error al generar el archivo")
-                        break
-                    elif opz == 2:
-                        break
-                except Exception as e:
-                    print(f"Error: {e}")
-        else:
-            print("No se encontraron datos que coincidan con el patron")
-
-
-
-    import html
     def generar_html(self, data, nombre_archivo="datos.html"):
         try:
             with open(nombre_archivo, "w", encoding="utf-8") as f:
