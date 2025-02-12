@@ -54,12 +54,6 @@ class Scraper:
         ttk.Button(btn_frame, text="Deseleccionar Todo", command=self.deselect_all).pack(side=tk.LEFT, padx=5)
         ttk.Button(btn_frame, text="Guardar Seleccionados", command=self.save_selected).pack(side=tk.RIGHT, padx=5)
         
-        self.api_data_frame = ttk.LabelFrame(self.api_frame, text="Datos API", padding="5")
-        self.api_data_frame.pack(fill=tk.BOTH, expand=True, pady=5)
-        
-        self.api_data_area = ttk.Frame(self.api_data_frame)
-        self.api_data_area.pack(fill=tk.BOTH, expand=True)
-        
         
         self.api_data_frame = ttk.LabelFrame(self.api_frame, text="Datos API", padding="5")
         self.api_data_frame.pack(fill=tk.BOTH, expand=True, pady=5)
@@ -217,7 +211,6 @@ class Scraper:
         else:
             print(f"Datos No esperados: {data}")
             ttk.Label(self.api_data_area, text="Error: Formato de datos no esperado.").pack(pady=5)
-
 
     def load_url(self):
         url = self.url_var.get()
