@@ -39,7 +39,7 @@ class Scraper:
         api_frame.pack(fill=tk.X, pady=5)
         
         self.palabra_var = tk.StringVar()
-        self.palabra_var.set("Tema a buscar")  
+        self.palabra_var.set("Palabra a buscar")  
         
         ttk.Label(api_frame, text="API URL:").pack(side=tk.LEFT, padx=5)
         palabra_var_entry = ttk.Entry(api_frame, textvariable=self.palabra_var, width=70)
@@ -215,7 +215,7 @@ class Scraper:
     def load_url(self):
         url = self.url_var.get()
         if not url:
-            messagebox.showwarning("Advertencia", "Por favor seleccione una URL")
+            messagebox.showwarning("!!!!", "Por favor seleccione una URL")
             return
             
         scraping = ServiceScraping(url)
@@ -233,8 +233,8 @@ class Scraper:
         }
         
         self.paragraph_vars = []
-        ttk.Label(self.scrollable_frame, text=f"Título: {titulo}", wraplength=700).pack(pady=5)
-        ttk.Label(self.scrollable_frame, text=f"Descripción: {descripcion}", wraplength=700).pack(pady=5)
+        ttk.Label(self.scrollable_frame, text=f"Titulo: {titulo}", wraplength=700).pack(pady=5)
+        ttk.Label(self.scrollable_frame, text=f"Descripcion: {descripcion}", wraplength=700).pack(pady=5)
         
         for i, dato in enumerate(datos):
             var = tk.BooleanVar()
@@ -246,7 +246,7 @@ class Scraper:
             cb = ttk.Checkbutton(frame, variable=var)
             cb.pack(side=tk.LEFT)
             
-            text = f"Subtítulo: {dato['sub_titulo']}\nContenido: {dato['contenido']}"
+            text = f"Subtitulo: {dato['sub_titulo']}\nContenido: {dato['contenido']}"
             label = ttk.Label(frame, text=text, wraplength=700)
             label.pack(side=tk.LEFT, padx=5)
             
@@ -285,7 +285,7 @@ class Scraper:
     def search_content(self):
         regex = self.search_var.get()
         if not regex:
-            messagebox.showwarning("!!!", "No se incontró ningúna palabra para buscar")
+            messagebox.showwarning("!!!", "No se incontro ninguna palabra para buscar")
             return
             
         data = self.db.get_data_by_regex(regex)
